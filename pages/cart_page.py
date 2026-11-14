@@ -15,6 +15,8 @@ class CartPage(BasePage):
     COUPON_MESSAGE = (By.CSS_SELECTOR, ".coupon-box .message")
     TOTAL = (By.CSS_SELECTOR, ".cart-total .product-price.order-total")
     SUBTOTAL = (By.XPATH, "//table[contains(@class,'cart-total')]//tr[.//*[normalize-space()='Sub-Total:']]//span[contains(@class,'product-price')]")
+    ITEM_ATTRIBUTES = (By.CSS_SELECTOR, ".attributes")
+    ITEM_UNIT_PRICE = (By.CSS_SELECTOR, ".product-unit-price")
 
     @staticmethod
     def money(text):
@@ -54,3 +56,18 @@ class CartPage(BasePage):
         field.send_keys(code)
         self.click(self.APPLY_COUPON)
         return self.visible(self.COUPON_MESSAGE).text
+
+    def product_row(self, product_name):
+        locator = (
+            By.XPATH,
+            f"//table[contains(@class,'cart')]//tr[.//a[normalize-space()='{product_name}']]"
+        )
+        return self.visible(locator)
+
+    def product_attributes(self, product_name):
+        row = self.product_row(product_name)
+        return row.find_element(*self.ITEM_ATTRIBUTES).text
+
+    def product_unit_price(self, product_name):
+        row = self.product_row(product_name)
+        return self.money(row.find_element(*self.ITEM_UNIT_PRICE).text)
