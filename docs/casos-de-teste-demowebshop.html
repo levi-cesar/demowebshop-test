@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Casos de Teste – Demo Web Shop (Projeto Final)</title>
+<style>
+  :root{--bg:#f6f7f9;--card:#fff;--txt:#1f2328;--muted:#5b6470;--line:#e2e5ea;--accent:#f28c28;--alta:#c62828;--media:#ef6c00;--baixa:#2e7d32;--pos:#1565c0;--neg:#6a1b9a}
+  *{box-sizing:border-box}
+  body{margin:0;font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--txt)}
+  header{background:#fff;border-bottom:4px solid var(--accent);padding:28px 40px}
+  header h1{margin:0 0 4px;font-size:26px}
+  header p{margin:2px 0;color:var(--muted)}
+  main{max-width:1100px;margin:0 auto;padding:24px 40px 60px}
+  h2{font-size:20px;margin:32px 0 12px}
+  .box{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 22px}
+  .box ul{margin:6px 0;padding-left:20px}
+  .tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:600;color:#fff;white-space:nowrap}
+  .Alta{background:var(--alta)}.Média{background:var(--media)}.Baixa{background:var(--baixa)}
+  .Positivo{background:var(--pos)}.Negativo{background:var(--neg)}
+  .mod{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;font-weight:600;background:#eef0f3;color:var(--txt);white-space:nowrap}
+
+  .toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin-bottom:12px}
+  .toolbar label{display:flex;flex-direction:column;font-size:12px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.03em;gap:4px}
+  .toolbar select{font:inherit;font-size:14px;padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:#fff;min-width:150px;text-transform:none;letter-spacing:0;color:var(--txt)}
+  .toolbar .spacer{flex:1}
+  .toolbar button{font:inherit;font-size:14px;padding:7px 14px;border-radius:8px;border:1px solid var(--line);background:#fff;cursor:pointer}
+  .toolbar button:hover{border-color:var(--accent);color:var(--accent)}
+  .toolbar button.limpar{border:none;background:none;color:var(--muted);text-decoration:underline;padding:7px 4px}
+  .contador{font-size:14px;color:var(--muted);margin:4px 2px 10px}
+
+  details.tc{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:10px;margin:8px 0;page-break-inside:avoid}
+  details.tc>summary{list-style:none;cursor:pointer;display:grid;grid-template-columns:22px 56px 1fr auto;gap:10px;align-items:center;padding:12px 18px}
+  details.tc>summary::-webkit-details-marker{display:none}
+  details.tc>summary::before{content:"▸";color:var(--muted);transition:transform .15s}
+  details.tc[open]>summary::before{transform:rotate(90deg)}
+  details.tc>summary:hover{background:#fafbfc;border-radius:10px}
+  .id{font-weight:700;color:var(--accent)}
+  .titulo{font-weight:600}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .corpo{padding:0 22px 18px 50px;border-top:1px solid var(--line)}
+  .corpo h4{margin:14px 0 4px;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+  .corpo ol,.corpo ul{margin:4px 0;padding-left:22px}
+  .corpo table{width:100%;border-collapse:collapse;font-size:14px;border:1px solid var(--line)}
+  .corpo th,.corpo td{text-align:left;padding:6px 10px;border-bottom:1px solid var(--line)}
+  .corpo th{background:#fafbfc;font-size:12px;color:var(--muted);text-transform:uppercase}
+  code{background:#f0f2f5;padding:1px 5px;border-radius:4px;font-size:13px;word-break:break-all}
+  .vazio{display:none;text-align:center;color:var(--muted);padding:24px}
+  footer{text-align:center;color:var(--muted);font-size:13px;padding:20px}
+  @media (max-width:700px){details.tc>summary{grid-template-columns:22px 50px 1fr}.tags{grid-column:2/4;justify-content:flex-start}.corpo{padding-left:22px}main,header{padding-left:16px;padding-right:16px}}
+  @media print{body{background:#fff}.toolbar,.contador{display:none}header{padding:12px 0}main{padding:0}details.tc{display:block!important}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Casos de Teste – Demo Web Shop</h1>
+  <p><strong>Disciplina:</strong> Automação de Testes Ágeis &nbsp;|&nbsp; <strong>Ferramentas:</strong> Selenium WebDriver + Python</p>
+  <p><strong>Aplicação sob teste:</strong> <a href="https://demowebshop.tricentis.com/" target="_blank">https://demowebshop.tricentis.com/</a></p>
+</header>
+<main>
+
+<h2>Instruções</h2>
+<div class="box">
+  <ul>
+    <li>O projeto deverá ser implementado <strong>em grupo</strong>.</li>
+    <li>Utilizar o padrão de projeto <strong>Page Objects</strong>.</li>
+    <li>Implementar <strong>no mínimo 3 testes por pessoa</strong>.</li>
+    <li>Implementar os testes usando <strong>Python + Selenium</strong>.</li>
+    <li>Serão avaliados:
+      <ul>
+        <li>Funcionamento correto dos testes;</li>
+        <li>Qualidade dos testes criados;</li>
+        <li>Qualidade do código implementado;</li>
+        <li>Boas práticas de programação.</li>
+      </ul>
+    </li>
+    <li>Estarei disponível para dúvidas e suporte.</li>
+  </ul>
+</div>
+
+<h2>Dicas</h2>
+<div class="box">
+  <ul>
+    <li>Todos os casos são executados <strong>sem login</strong> (visitante), exceto quando a pré-condição diz outra coisa.</li>
+    <li>O ambiente é <strong>público e compartilhado</strong>: outras pessoas alteram os dados. Gere dados únicos (por exemplo, e-mail com timestamp) e não dependa de registros criados por terceiros.</li>
+    <li>Cada teste deve ser <strong>independente</strong>: crie os dados de que precisa na pré-condição (setup). O carrinho, a lista de desejos, a lista de comparação e os produtos vistos ficam guardados em cookies. Abra um navegador novo para cada teste para começar com essas listas vazias.</li>
+    <li>Use <strong>esperas explícitas</strong> (<code>WebDriverWait</code> + <code>expected_conditions</code>). Evite <code>time.sleep()</code>.</li>
+    <li>Várias ações (adicionar ao carrinho, à lista de desejos etc.) mostram uma barra de notificação no topo da página (<code>#bar-notification</code>), que some em poucos segundos. Valide a mensagem logo após a ação.</li>
+    <li>Neste site, os campos de seleção (por exemplo, <em>Sort by</em> e <em>Country</em>) são <code>&lt;select&gt;</code> nativos. Você pode usar a classe <code>Select</code> do Selenium.</li>
+  </ul>
+</div>
+
+<h2>Casos de teste</h2>
+<div class="toolbar">
+  <label>Módulo<select id="fModulo"></select></label>
+  <label>Tipo<select id="fTipo"></select></label>
+  <label>Prioridade<select id="fPrioridade"></select></label>
+  <button class="limpar" id="limpar" type="button">Limpar filtros</button>
+  <span class="spacer"></span>
+  <button id="expandir" type="button">Expandir tudo</button>
+  <button id="colapsar" type="button">Colapsar tudo</button>
+</div>
+<div class="contador" id="contador"></div>
+<div id="cases"></div>
+<div class="vazio" id="vazio">Nenhum caso de teste encontrado para os filtros selecionados.</div>
+
+</main>
+<footer>Casos de teste para o projeto final – Automação de Testes Ágeis</footer>
+
+<script>
+const U = p => `<code>https://demowebshop.tricentis.com${p}</code>`;
+const HOME = "Página inicial "+U("/")+" aberta.";
+const casos = [
+{
+  id:"CT01", titulo:"Pesquisar produto pelo nome", modulo:"Pesquisa", tipo:"Positivo", prioridade:"Alta",
+  objetivo:"Verificar que a pesquisa do cabeçalho encontra o produto pelo nome.",
+  pre:[HOME],
+  dados:[["Termo de pesquisa","laptop"]],
+  passos:["No campo de pesquisa do cabeçalho, digitar <code>laptop</code>.","Clicar em <em>Search</em>."],
+  esperado:["A URL é "+U("/search?q=laptop")+".","O título da página é <strong>Search</strong>.","A lista de resultados exibe o produto <strong>14.1-inch Laptop</strong>."]
+},
+{
+  id:"CT02", titulo:"Navegar até uma subcategoria", modulo:"Navegação", tipo:"Positivo", prioridade:"Média",
+  objetivo:"Verificar a navegação de uma categoria até a sua subcategoria.",
+  pre:[HOME],
+  dados:[],
+  passos:["Clicar na categoria <em>COMPUTERS</em> do menu superior.","Verificar as subcategorias exibidas.","Clicar na subcategoria <em>Notebooks</em>."],
+  esperado:["No passo 1, a URL é "+U("/computers")+".","No passo 2, as subcategorias exibidas são <strong>Desktops</strong>, <strong>Notebooks</strong> e <strong>Accessories</strong>.","No passo 3, a URL é "+U("/notebooks")+".","O título da página é <strong>Notebooks</strong> e o caminho (breadcrumb) é <strong>HOME / COMPUTERS / NOTEBOOKS</strong>."]
+},
+{
+  id:"CT03", titulo:"Ordenar produtos pelo maior preço", modulo:"Catálogo", tipo:"Positivo", prioridade:"Média",
+  objetivo:"Verificar a ordenação dos produtos de uma categoria por preço decrescente.",
+  pre:["Página "+U("/books")+" aberta."],
+  dados:[["Sort by","Price: High to Low"]],
+  passos:["No campo <em>Sort by</em>, selecionar <code>Price: High to Low</code>.","Coletar os preços de todos os produtos exibidos."],
+  esperado:["A URL é "+U("/books?orderby=11")+".","O campo <em>Sort by</em> exibe <strong>Price: High to Low</strong>.","Os preços estão em ordem decrescente (o primeiro produto é <strong>Science</strong>, com preço <strong>51.00</strong>)."]
+},
+{
+  id:"CT04", titulo:"Filtrar produtos por faixa de preço", modulo:"Catálogo", tipo:"Positivo", prioridade:"Baixa",
+  objetivo:"Verificar que o filtro de preço mostra somente os produtos da faixa selecionada.",
+  pre:["Página "+U("/books")+" aberta."],
+  dados:[["Filter by price","Under 25.00"]],
+  passos:["No bloco <em>Filter by price</em>, clicar em <em>Under 25.00</em>.","Coletar os preços de todos os produtos exibidos.","Clicar em <em>Remove Filter</em>."],
+  esperado:["No passo 1, a URL é "+U("/books?price=-25")+".","Todos os preços exibidos são menores que <strong>25.00</strong> (o produto <em>Science</em>, de 51.00, não aparece).","No passo 3, o filtro é removido e o produto <em>Science</em> aparece outra vez."]
+},
+{
+  id:"CT05", titulo:"Configurar computador e adicionar ao carrinho", modulo:"Carrinho", tipo:"Positivo", prioridade:"Alta",
+  objetivo:"Verificar que as opções escolhidas e o preço calculado do produto configurável aparecem no carrinho.",
+  pre:["Carrinho vazio.","Página "+U("/build-your-own-computer")+" aberta (preço base <strong>1200.00</strong>)."],
+  dados:[["Processor","2.5 GHz Intel Pentium Dual-Core E2200 [+15.00]"],["RAM","8GB [+60.00]"],["HDD","400 GB [+100.00]"],["OS","Windows 10 [+60.00]"],["Software","Microsoft Office [+50.00] (somente esta opção marcada)"]],
+  passos:["Selecionar as opções da tabela de dados de teste.","Clicar em <em>Add to cart</em>.","Clicar em <em>Shopping cart</em> no cabeçalho."],
+  esperado:["A barra de notificação exibe <strong>The product has been added to your shopping cart</strong>.","O cabeçalho exibe <strong>Shopping cart (1)</strong>.","No carrinho, a URL é "+U("/cart")+".","A linha do produto exibe todas as opções escolhidas e o preço <strong>1485.00</strong> (1200 + 15 + 60 + 100 + 60 + 50)."]
+},
+{
+  id:"CT06", titulo:"Atualizar a quantidade de um produto no carrinho", modulo:"Carrinho", tipo:"Positivo", prioridade:"Alta",
+  objetivo:"Verificar que o total do carrinho é recalculado quando a quantidade muda.",
+  pre:["Produto <em>14.1-inch Laptop</em> (preço <strong>1590.00</strong>) adicionado ao carrinho com quantidade 1 no setup.","Página "+U("/cart")+" aberta."],
+  dados:[["Qty.","3"]],
+  passos:["Alterar o campo <em>Qty.</em> do produto para <code>3</code>.","Clicar em <em>Update shopping cart</em>."],
+  esperado:["A URL continua "+U("/cart")+".","A coluna <em>Total</em> do produto exibe <strong>4770.00</strong>.","O <em>Sub-Total</em> exibe <strong>4770.00</strong>.","O cabeçalho exibe <strong>Shopping cart (3)</strong>."]
+},
+{
+  id:"CT07", titulo:"Aplicar cupom de desconto inválido", modulo:"Carrinho", tipo:"Negativo", prioridade:"Média",
+  objetivo:"Verificar que um cupom inexistente é recusado e o total não muda.",
+  pre:["Um produto qualquer adicionado ao carrinho no setup.","Página "+U("/cart")+" aberta."],
+  dados:[["Discount Code","CUPOMINVALIDO"]],
+  passos:["Guardar o valor do <em>Total</em> do carrinho.","Preencher o campo do cupom de desconto com <code>CUPOMINVALIDO</code>.","Clicar em <em>Apply coupon</em>."],
+  esperado:["A mensagem <strong>The coupon code you entered couldn't be applied to your order</strong> é exibida.","O <em>Total</em> do carrinho é igual ao valor do passo 1.","A URL continua "+U("/cart")+"."]
+},
+{
+  id:"CT08", titulo:"Finalizar compra como visitante", modulo:"Checkout", tipo:"Positivo", prioridade:"Alta",
+  objetivo:"Verificar o fluxo completo de compra sem cadastro.",
+  pre:["Produto <em>14.1-inch Laptop</em> adicionado ao carrinho com quantidade 1 no setup.","Página "+U("/cart")+" aberta."],
+  dados:[["First name / Last name","Aluno / QA"],["Email","aluno.qa&lt;timestamp&gt;@example.com"],["Country","Brazil"],["City","Recife"],["Address 1","Rua Teste, 100"],["Zip / postal code","50000-000"],["Phone number","81999990000"],["Shipping Method","Ground"],["Payment Method","Cash On Delivery (COD) (7.00)"]],
+  passos:["Marcar <em>I agree with the terms of service</em> e clicar em <em>Checkout</em>.","Clicar em <em>Checkout as Guest</em>.","Preencher <em>Billing Address</em> e clicar em <em>Continue</em>.","Em <em>Shipping Address</em>, clicar em <em>Continue</em>.","Selecionar <em>Ground</em> e clicar em <em>Continue</em>.","Selecionar <em>Cash On Delivery (COD)</em> e clicar em <em>Continue</em>.","Em <em>Payment Information</em>, clicar em <em>Continue</em>.","Em <em>Confirm Order</em>, verificar o total e clicar em <em>Confirm</em>."],
+  esperado:["No passo 2, a URL é "+U("/onepagecheckout")+".","No passo 7, a mensagem <strong>You will pay by COD</strong> é exibida.","No passo 8, o <em>Total</em> é <strong>1597.00</strong> (1590.00 + taxa de 7.00).","A mensagem <strong>Your order has been successfully processed!</strong> é exibida, com o número do pedido.","A URL é "+U("/checkout/completed/")+"."]
+},
+{
+  id:"CT09", titulo:"Adicionar produto à lista de desejos", modulo:"Lista de desejos", tipo:"Positivo", prioridade:"Média",
+  objetivo:"Verificar que o produto adicionado aparece na lista de desejos.",
+  pre:["Lista de desejos vazia.","Página "+U("/50s-rockabilly-polka-dot-top-jr-plus-size")+" aberta."],
+  dados:[["Size","Small"]],
+  passos:["Selecionar <em>Size</em> = <code>Small</code>.","Clicar em <em>Add to wishlist</em>.","Clicar em <em>Wishlist</em> no cabeçalho."],
+  esperado:["A barra de notificação exibe <strong>The product has been added to your wishlist</strong>.","O cabeçalho exibe <strong>Wishlist (1)</strong>.","No passo 3, a URL é "+U("/wishlist")+".","A lista exibe <strong>50's Rockabilly Polka Dot Top JR Plus Size</strong>, com <em>Size: Small</em> e preço <strong>11.00</strong>."]
+},
+{
+  id:"CT10", titulo:"Comparar dois produtos", modulo:"Comparação", tipo:"Positivo", prioridade:"Baixa",
+  objetivo:"Verificar que a lista de comparação mostra os produtos selecionados lado a lado.",
+  pre:["Lista de comparação vazia."],
+  dados:[["Produto 1",U("/141-inch-laptop")],["Produto 2",U("/fiction")]],
+  passos:["Abrir a página do produto 1 e clicar em <em>Add to compare list</em>.","Abrir a página do produto 2 e clicar em <em>Add to compare list</em>."],
+  esperado:["Após cada clique, o sistema abre a URL "+U("/compareproducts")+".","No final, a tabela exibe os dois produtos: <strong>Fiction</strong> e <strong>14.1-inch Laptop</strong>.","A linha <em>Price</em> exibe <strong>24.00</strong> e <strong>1590.00</strong>.","O link <strong>Clear list</strong> é exibido."]
+},
+{
+  id:"CT11", titulo:"Exibir produtos vistos recentemente", modulo:"Navegação", tipo:"Positivo", prioridade:"Baixa",
+  objetivo:"Verificar que o site registra os produtos visitados na ordem correta.",
+  pre:["Navegador novo, sem produtos visitados."],
+  dados:[["Produto 1",U("/141-inch-laptop")],["Produto 2",U("/fiction")]],
+  passos:["Abrir a página do produto 1.","Abrir a página do produto 2.","No rodapé, clicar em <em>Recently viewed products</em>."],
+  esperado:["A URL é "+U("/recentlyviewedproducts")+".","O título da página é <strong>Recently viewed products</strong>.","A lista exibe <strong>Fiction</strong> em primeiro lugar e <strong>14.1-inch Laptop</strong> em segundo (o produto visto por último aparece primeiro)."]
+},
+{
+  id:"CT12", titulo:"Cadastrar nova conta de cliente", modulo:"Cadastro", tipo:"Positivo", prioridade:"Alta",
+  objetivo:"Verificar o cadastro de um novo cliente.",
+  pre:[HOME],
+  dados:[["Gender","Female"],["First name","Aluno"],["Last name","QA"],["Email","aluno.qa&lt;timestamp&gt;@example.com (único)"],["Password / Confirm password","Teste@1234"]],
+  passos:["Clicar em <em>Register</em> no cabeçalho.","Verificar a URL da página.","Preencher todos os campos.","Clicar em <em>Register</em>."],
+  esperado:["No passo 2, a URL é "+U("/register")+".","A mensagem <strong>Your registration completed</strong> é exibida.","A URL é "+U("/registerresult/1")+".","O cabeçalho exibe o e-mail cadastrado e o link <strong>Log out</strong>."]
+},
+{
+  id:"CT13", titulo:"Assinar newsletter com e-mail inválido", modulo:"Newsletter", tipo:"Negativo", prioridade:"Baixa",
+  objetivo:"Verificar a validação de e-mail na assinatura da newsletter.",
+  pre:[HOME],
+  dados:[["Email","email-invalido"]],
+  passos:["No bloco <em>Newsletter</em>, preencher o e-mail com <code>email-invalido</code>.","Clicar em <em>Subscribe</em>."],
+  esperado:["A mensagem <strong>Enter valid email</strong> é exibida no bloco <em>Newsletter</em>.","A URL continua "+U("/")+"."]
+},
+{
+  id:"CT14", titulo:"Enviar formulário de contato vazio", modulo:"Contato", tipo:"Negativo", prioridade:"Média",
+  objetivo:"Verificar a validação dos campos obrigatórios do formulário Contact Us.",
+  pre:[HOME],
+  dados:[["Your name / Your email / Enquiry","(vazios)"]],
+  passos:["No rodapé, clicar em <em>Contact us</em>.","Deixar todos os campos vazios.","Clicar em <em>Submit</em>."],
+  esperado:["A URL é "+U("/contactus")+".","As mensagens <strong>Enter your name</strong>, <strong>Enter email</strong> e <strong>Enter enquiry</strong> são exibidas.","O formulário não é enviado."]
+},
+{
+  id:"CT15", titulo:"Votar na enquete sem estar logado", modulo:"Enquete", tipo:"Negativo", prioridade:"Baixa",
+  objetivo:"Verificar que somente usuários cadastrados podem votar na enquete.",
+  pre:[HOME,"Usuário não autenticado (visitante)."],
+  dados:[["Resposta","Excellent"]],
+  passos:["No bloco <em>Community poll</em>, selecionar <em>Excellent</em>.","Clicar em <em>Vote</em>."],
+  esperado:["A mensagem <strong>Only registered users can vote.</strong> é exibida no bloco da enquete.","A URL continua "+U("/")+"."]
+}
+];
+
+const lista = (arr, tag) => `<${tag}>${arr.map(i=>`<li>${i}</li>`).join("")}</${tag}>`;
+document.getElementById("cases").innerHTML = casos.map(c => `
+<details class="tc" id="${c.id}" data-modulo="${c.modulo}" data-tipo="${c.tipo}" data-prioridade="${c.prioridade}">
+  <summary>
+    <span class="id">${c.id}</span>
+    <span class="titulo">${c.titulo}</span>
+    <span class="tags"><span class="mod">${c.modulo}</span><span class="tag ${c.tipo}">${c.tipo}</span><span class="tag ${c.prioridade}">${c.prioridade}</span></span>
+  </summary>
+  <div class="corpo">
+    <p><strong>Objetivo:</strong> ${c.objetivo}</p>
+    <h4>Pré-condições</h4>${lista(c.pre,"ul")}
+    ${c.dados.length ? `<h4>Dados de teste</h4><table><thead><tr><th>Campo</th><th>Valor</th></tr></thead><tbody>${c.dados.map(d=>`<tr><td>${d[0]}</td><td>${d[1]}</td></tr>`).join("")}</tbody></table>` : ""}
+    <h4>Passos</h4>${lista(c.passos,"ol")}
+    <h4>Resultado esperado</h4>${lista(c.esperado,"ul")}
+  </div>
+</details>`).join("");
+
+const filtros = {modulo:"fModulo", tipo:"fTipo", prioridade:"fPrioridade"};
+const ordemPrioridade = ["Alta","Média","Baixa"];
+for (const [campo, id] of Object.entries(filtros)) {
+  let valores = [...new Set(casos.map(c=>c[campo]))];
+  if (campo==="prioridade") valores = ordemPrioridade.filter(v=>valores.includes(v));
+  document.getElementById(id).innerHTML = `<option value="">Todos</option>` + valores.map(v=>`<option>${v}</option>`).join("");
+  document.getElementById(id).addEventListener("change", aplicar);
+}
+const itens = () => [...document.querySelectorAll("details.tc")];
+const visiveis = () => itens().filter(d=>d.style.display!=="none");
+function aplicar(){
+  const sel = Object.fromEntries(Object.entries(filtros).map(([k,id])=>[k,document.getElementById(id).value]));
+  let n = 0;
+  itens().forEach(d=>{
+    const ok = Object.entries(sel).every(([k,v])=>!v || d.dataset[k]===v);
+    d.style.display = ok ? "" : "none"; if(ok) n++;
+  });
+  document.getElementById("contador").textContent = `Exibindo ${n} de ${casos.length} casos de teste`;
+  document.getElementById("vazio").style.display = n ? "none" : "block";
+}
+document.getElementById("limpar").onclick = () => { Object.values(filtros).forEach(id=>document.getElementById(id).value=""); aplicar(); };
+document.getElementById("expandir").onclick = () => visiveis().forEach(d=>d.open=true);
+document.getElementById("colapsar").onclick = () => itens().forEach(d=>d.open=false);
+window.addEventListener("beforeprint", () => itens().forEach(d=>d.open=true));
+aplicar();
+</script>
+</body>
+</html>
