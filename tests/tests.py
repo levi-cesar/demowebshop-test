@@ -1,6 +1,47 @@
 from decimal import Decimal
 
+from pages.catalog_page import CatalogPage
 from pages.product_page import ProductPage
+
+
+def test_ct01_pesquisar_produto(driver, base_url):
+    catalog = CatalogPage(driver, base_url).open()
+
+    catalog.search("laptop")
+
+    assert driver.current_url == f"{base_url}/search?q=laptop"
+    assert catalog.title == "Search"
+    assert "14.1-inch Laptop" in catalog.product_names
+
+
+def test_ct02_navegar_ate_subcategoria(driver, base_url):
+    catalog = CatalogPage(driver, base_url).open()
+
+    catalog.open_computers()
+
+    assert driver.current_url == f"{base_url}/computers"
+    assert set(catalog.subcategories) == {"Desktops", "Notebooks", "Accessories"}
+
+    catalog.open_notebooks()
+
+    assert driver.current_url == f"{base_url}/notebooks"
+    assert catalog.title == "Notebooks"
+    assert catalog.breadcrumb == ["HOME", "COMPUTERS", "NOTEBOOKS"]
+
+
+def test_ct04_filtrar_produtos_por_preco(driver, base_url):
+    catalog = CatalogPage(driver, base_url).open("/books")
+
+    catalog.filter_under_25()
+
+    assert driver.current_url == f"{base_url}/books?price=-25"
+    assert all(price < Decimal("25.00") for price in catalog.prices)
+    assert "Science" not in catalog.product_names
+
+    catalog.remove_filter()
+
+    assert driver.current_url == f"{base_url}/books"
+    assert "Science" in catalog.product_names
 
 
 def test_ct06_atualizar_quantidade_no_carrinho(driver, base_url, cart_with_laptop):
