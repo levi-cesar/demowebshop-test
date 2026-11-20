@@ -8,6 +8,7 @@ from pages.base_page import BasePage
 from pages.cart_page import CartPage
 from pages.recently_viewed_page import RecentlyViewedPage
 from pages.compare_products_page import CompareProductsPage
+from pages.wishlist_page import WishlistPage
 
 class ProductPage(BasePage):
     ADD_TO_CART = (By.CSS_SELECTOR, ".add-to-cart-button")
@@ -20,6 +21,7 @@ class ProductPage(BasePage):
     # Campos dropdown (<select>)
     PROCESSOR_FIELD = (By.ID, "product_attribute_16_5_4")
     RAM_FIELD = (By.ID, "product_attribute_16_6_5")
+    SIZE_FIELD = (By.ID, "product_attribute_5_7_1")
 
     # Opções de HDD (radio buttons)
     HDD_OPTIONS = {
@@ -40,6 +42,10 @@ class ProductPage(BasePage):
         "23": (By.ID, "product_attribute_16_8_8_23"),  # Acrobat Reader [+10.00]
         "24": (By.ID, "product_attribute_16_8_8_24"),  # Total Commander [+5.00]
     }
+
+    # Wishlist
+    ADD_TO_WISHLIST = (By.ID, "add-to-wishlist-button-5")
+    WISHLIST_LINK = (By.CSS_SELECTOR, ".header-links .ico-wishlist")
 
     def add_to_cart(self):
         self.click(self.ADD_TO_CART)
@@ -89,6 +95,21 @@ class ProductPage(BasePage):
         self.wait.until(EC.url_contains("/compareproducts"))
         return CompareProductsPage(self.driver, self.base_url)
 
+    def select_size(self, size):
+        Select(self.visible(self.SIZE_FIELD)).select_by_visible_text(size)
+        return self
+
+    def add_to_wishlist(self):
+        self.click(self.ADD_TO_WISHLIST)
+        self.wait.until(EC.text_to_be_present_in_element(
+            self.NOTIFICATION, "The product has been added to your wishlist"
+        ))
+        return self
+
+    def open_wishlist(self):
+        self.click(self.WISHLIST_LINK)
+        return WishlistPage(self.driver, self.base_url)
+
     @property
     def notification_text(self):
         return self.visible(self.NOTIFICATION).text.strip()
@@ -96,6 +117,10 @@ class ProductPage(BasePage):
     @property
     def header_cart_text(self):
         return self.visible(self.CART_LINK).text.strip()
+
+    @property
+    def header_wishlist_text(self):
+        return " ".join(self.visible(self.WISHLIST_LINK).text.split())
 
     @property
     def price(self):

@@ -4,6 +4,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
 from pages.base_page import BasePage
+from pages.checkout_page import CheckoutPage
 
 
 class CartPage(BasePage):
@@ -17,6 +18,8 @@ class CartPage(BasePage):
     SUBTOTAL = (By.XPATH, "//table[contains(@class,'cart-total')]//tr[.//*[normalize-space()='Sub-Total:']]//span[contains(@class,'product-price')]")
     ITEM_ATTRIBUTES = (By.CSS_SELECTOR, ".attributes")
     ITEM_UNIT_PRICE = (By.CSS_SELECTOR, ".product-unit-price")
+    TERMS = (By.ID, "termsofservice")
+    CHECKOUT = (By.ID, "checkout")
 
     @staticmethod
     def money(text):
@@ -71,3 +74,10 @@ class CartPage(BasePage):
     def product_unit_price(self, product_name):
         row = self.product_row(product_name)
         return self.money(row.find_element(*self.ITEM_UNIT_PRICE).text)
+
+    def begin_checkout(self):
+        terms = self.visible(self.TERMS)
+        if not terms.is_selected():
+            terms.click()
+        self.click(self.CHECKOUT)
+        return CheckoutPage(self.driver, self.base_url)

@@ -5,6 +5,7 @@ from pages.catalog_page import CatalogPage
 from pages.product_page import ProductPage
 from pages.cart_page import CartPage
 from pages.compare_products_page import CompareProductsPage
+from pages.home_page import HomePage
 
 def test_ct01_pesquisar_produto(driver, base_url):
     catalog = CatalogPage(driver, base_url).open()
@@ -121,6 +122,47 @@ def test_ct07_recusar_cupom_invalido(driver, base_url, cart_with_laptop):
     assert cart.total == original_total
     assert driver.current_url == f"{base_url}/cart"
 
+def test_ct08_finalizar_compra_como_visitante(driver, base_url, cart_with_laptop):
+    timestamp = int(time.time())
+    checkout = cart_with_laptop.begin_checkout()
+
+    checkout.checkout_as_guest()
+
+    assert driver.current_url == f"{base_url}/onepagecheckout"
+
+    checkout.fill_billing_address(f"aluno.qa{timestamp}@example.com")
+    checkout.continue_shipping_address()
+    checkout.select_ground_and_continue()
+    checkout.select_cod_and_continue()
+
+    assert "You will pay by COD" in checkout.payment_information_message()
+    checkout.continue_payment_information()
+
+    assert checkout.confirm_total == Decimal("1597.00")
+    checkout.confirm_order()
+
+    assert driver.current_url == f"{base_url}/checkout/completed/"
+    assert "Your order has been successfully processed!" in checkout.completed_message
+    assert checkout.order_number.isdigit()
+
+def test_ct09_adicionar_produto_a_lista_de_desejos(driver, base_url):
+    product = ProductPage(driver, base_url).open("/50s-rockabilly-polka-dot-top-jr-plus-size")
+
+    product.select_size("Small")
+    product.add_to_wishlist()
+
+    assert "The product has been added to your wishlist" in product.notification_text
+    assert product.header_wishlist_text == "Wishlist (1)"
+
+    wishlist = product.open_wishlist()
+
+    assert driver.current_url == f"{base_url}/wishlist"
+
+    product_name = "50's Rockabilly Polka Dot Top JR Plus Size"
+    assert wishlist.product_attributes(product_name) == "Size: Small"
+    assert wishlist.product_unit_price(product_name) == Decimal("11.00")
+
+
 def test_ct10_comparar_dois_produtos(driver, base_url):
     expected_compare_url = f"{base_url.rstrip('/')}/compareproducts"
 
@@ -153,3 +195,9 @@ def test_ct11_exibir_produtos_vistos_recentemente(driver, base_url):
     assert driver.current_url == f"{base_url}/recentlyviewedproducts"
     assert recently_viewed.title == "Recently viewed products"
     assert recently_viewed.product_names == ["Fiction", "14.1-inch Laptop"]
+
+def test_ct13_rejeitar_email_invalido_na_newsletter(driver, base_url):
+    home = HomePage(driver, base_url).open()
+    message = home.submit_invalid_newsletter_email("email-invalido")
+    assert message == "Enter valid email"
+    assert driver.current_url == f"{base_url}/"
